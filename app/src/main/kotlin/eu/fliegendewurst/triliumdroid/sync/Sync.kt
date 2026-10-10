@@ -243,11 +243,11 @@ object Sync {
 		"blobs" -> "blobId"
 		"branches" -> "branchId"
 		"entity_changes" -> "changeId"
-		"etapi_tokens" -> "" // TODO
+		"etapi_tokens" -> "etapiTokenId"
 		"notes" -> "noteId"
 		"note_contents" -> "noteId" // is this still relevant?
 		"options" -> "name"
-		"recent_notes" -> "" // TODO
+		"recent_notes" -> "noteId"
 		"revisions" -> "revisionId"
 		"note_embeddings" -> "embedId"
 		"embedding_queue" -> "noteId" // unclear if this is synchronized

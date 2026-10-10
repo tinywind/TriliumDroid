@@ -33,3 +33,7 @@
 ## Progress
 
 2026-10-10: Original app is not debuggable; run-as cannot extract its private database. Side-by-side installation preserves its data without relying on an unavailable release signing key. Local JDK is available through IntelliJ; no Android SDK found in the usual locations, so use GitHub Actions for Android builds.
+
+Parser verification: four JUnit tests passed under `-Xmx96m`, including a 280 MiB binary hash comparison, null/empty/escaped data, truncated input, consumer failure, and missing checkpoints.
+
+Review ruling: SQLite concatenation keeps Java heap bounded but native allocation grows with the blob and cumulative copying is quadratic in the number of chunks. Accept this Android public-API tradeoff only after real-device verification of the largest existing attachments. Do not claim constant total process memory or unlimited attachment size.

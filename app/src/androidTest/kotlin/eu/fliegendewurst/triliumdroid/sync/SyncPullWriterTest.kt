@@ -12,6 +12,26 @@ import java.io.OutputStream
 import java.security.MessageDigest
 
 class SyncPullWriterTest {
+	@Test
+	fun supportsTokenAndRecentNoteEntities() {
+		val context = InstrumentationRegistry.getInstrumentation().targetContext
+		val directory = File(context.cacheDir, "sync-metadata-test-${System.nanoTime()}").apply { mkdirs() }
+		val db = SQLiteDatabase.create(null)
+		try {
+			db.execSQL("CREATE TABLE entity_changes (changeId TEXT PRIMARY KEY)")
+			db.execSQL("CREATE TABLE options (name TEXT PRIMARY KEY, value TEXT, isSynced INT, utcDateModified TEXT)")
+			db.execSQL("CREATE TABLE etapi_tokens (etapiTokenId TEXT PRIMARY KEY, name TEXT)")
+			db.execSQL("CREATE TABLE recent_notes (noteId TEXT PRIMARY KEY, notePath TEXT)")
+			val page = """{"entityChanges":[{"entityChange":{"entityName":"etapi_tokens","changeId":"a"},"entity":{"etapiTokenId":"a","name":"test"}},{"entityChange":{"entityName":"recent_notes","changeId":"b"},"entity":{"noteId":"root","notePath":"root"}}],"lastEntityChangeId":2,"outstandingPullCount":0}"""
+			SyncPullWriter.apply(db, page.byteInputStream(), directory)
+			for (table in listOf("etapi_tokens", "recent_notes")) {
+				db.rawQuery("SELECT count(*) FROM $table", null).use { it.moveToFirst(); assertEquals(1, it.getInt(0)) }
+			}
+		} finally {
+			db.close()
+			directory.deleteRecursively()
+		}
+	}
 
 	@Test
 	fun largeBinaryIsStoredExactlyAndFailedPageRollsBack() {
