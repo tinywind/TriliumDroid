@@ -23,7 +23,7 @@ public class StreamingSyncReaderTest {
         MessageDigest expected = MessageDigest.getInstance("SHA-256");
         byte[] block = new byte[8192];
         for (int i = 0; i < block.length; i++) block[i] = (byte) i;
-        int size = 280 * 1024 * 1024 + 5;
+        int size = 391_643_136;
         try (OutputStream out = new BufferedOutputStream(new FileOutputStream(response))) {
             out.write("{\"entityChanges\":[{\"entity\":{\"content\":\"".getBytes(StandardCharsets.UTF_8));
             OutputStream encoded = Base64.getEncoder().wrap(new FilterOutputStream(out) {

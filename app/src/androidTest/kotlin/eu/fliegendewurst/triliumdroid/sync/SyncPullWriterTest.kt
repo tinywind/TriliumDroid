@@ -45,7 +45,7 @@ class SyncPullWriterTest {
 			val response = File(directory, "response.json")
 			val digest = MessageDigest.getInstance("SHA-256")
 			val block = ByteArray(8192) { it.toByte() }
-			val size = 48 * 1024 * 1024 + 5
+			val size = 391_643_136
 			response.outputStream().buffered().use { output ->
 				output.write("""{"entityChanges":[{"entityChange":{"entityName":"blobs","changeId":"large"},"entity":{"blobId":"large","content":"""".toByteArray())
 				val encoded = Base64OutputStream(object : FilterOutputStream(output) {
@@ -70,7 +70,7 @@ class SyncPullWriterTest {
 			val actual = MessageDigest.getInstance("SHA-256")
 			var offset = 1
 			while (offset <= size) {
-				db.rawQuery("SELECT substr(content, ?, 65536) FROM blobs WHERE blobId='large'", arrayOf(offset.toString())).use {
+				db.rawQuery("SELECT substr(content, ?, 1048576) FROM blobs WHERE blobId='large'", arrayOf(offset.toString())).use {
 					assertTrue(it.moveToFirst())
 					val bytes = it.getBlob(0)
 					actual.update(bytes)
